@@ -69,24 +69,35 @@ public class UserController {
 		}
 		
 		userRepo.save(findUser);
-		
-		return "Sukses! akun anda telah terverifikasi";
-	}
 
-	
-    // @GetMapping("/{username}")
-    // public Optional<User> getUsername(@RequestParam String username) {
-    //     return userRepo.findByUsername(username);
-	// }
+		// String home = "http://localhost:3000/";
+		
+		return "Sukses! akun anda telah terverifikasi\n";
+	}
 
 	@GetMapping("/username")
     public Iterable<User> getUsername(@RequestParam String username) {
         return userRepo.findUsername(username);
     }
 	
-	// @GetMapping
-    // public Iterable<User> getUser() {
-    //     return userRepo.findAll();
-    // }
+	@GetMapping("/login")
+    public User loginUser(@RequestParam String username, @RequestParam String password) {
+		User findUser = userRepo.findByUsername(username).get();
+		
+        if (pwEncoder.matches(password, findUser.getPassword())) {
+            findUser.setPassword(null);
+            return findUser;
+        } 
+
+        throw new RuntimeException("wrong password");
+	}
+
+	@GetMapping("/login/byId")
+    public Optional<User> loginById(@RequestParam int id) {
+		return userRepo.findById(id);
+	}
+
+
+
 	
 }
