@@ -81,14 +81,6 @@ public class BookingFieldController {
 
         bookingFieldRepo.deleteById(id);
 
-        // findDepartment.getEmployees().forEach(employee -> {
-        //     employee.setDepartment(null);
-        //     employeeRepo.save(employee);
-        // });
-
-        // findDepartment.setEmployees(null);
-
-        // departmentRepo.deleteById(departmentId);
     }
 
    

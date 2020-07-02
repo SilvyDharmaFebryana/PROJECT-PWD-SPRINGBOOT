@@ -1,9 +1,16 @@
 package com.kickoff.kickoff.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Field {
@@ -16,6 +23,14 @@ public class Field {
     private String description;
     private String image;
     private String fieldName;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "field", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<BookingField> bookingField;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fieldTransactions", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<FTransactionDetails> fTransactionDetails;
 
     public int getId() {
         return id;
@@ -71,6 +86,14 @@ public class Field {
 
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
+    }
+
+    public List<BookingField> getBookingField() {
+        return bookingField;
+    }
+
+    public void setBookingField(List<BookingField> bookingField) {
+        this.bookingField = bookingField;
     }
 
   

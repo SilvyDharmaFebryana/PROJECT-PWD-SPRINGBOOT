@@ -1,9 +1,16 @@
 package com.kickoff.kickoff.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class User {
@@ -22,6 +29,15 @@ public class User {
     private String gender;
     private String phoneNumber;
     private boolean isVerified;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<BookingField> bookingField;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<FieldTransactions> fieldTransactions;
+
 
     public int getId() {
         return id;
@@ -125,6 +141,22 @@ public class User {
 
     public void setVerified(boolean isVerified) {
         this.isVerified = isVerified;
+    }
+
+    public List<BookingField> getBookingField() {
+        return bookingField;
+    }
+
+    public void setBookingField(List<BookingField> bookingField) {
+        this.bookingField = bookingField;
+    }
+
+    public List<FieldTransactions> getFieldTransactions() {
+        return fieldTransactions;
+    }
+
+    public void setFieldTransactions(List<FieldTransactions> fieldTransactions) {
+        this.fieldTransactions = fieldTransactions;
     }
 
     

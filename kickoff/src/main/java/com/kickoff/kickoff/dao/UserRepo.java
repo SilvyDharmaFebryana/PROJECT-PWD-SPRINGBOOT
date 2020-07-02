@@ -13,4 +13,5 @@ public interface UserRepo extends JpaRepository<User, Integer> {
 
     @Query(value = "SELECT * FROM User WHERE username = ?1", nativeQuery = true)
     public Iterable<User> findUsername(String username);
+    
 }
