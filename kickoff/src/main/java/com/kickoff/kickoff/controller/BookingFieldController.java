@@ -39,8 +39,8 @@ public class BookingFieldController {
     }
 
     @GetMapping("/check/")
-    public Iterable<BookingField> getDateTimeCheck(@RequestParam String date, @RequestParam String time) {
-        return bookingFieldRepo.findDateTime(date, time);
+    public Iterable<BookingField> getDateTimeCheck(@RequestParam String date, @RequestParam String time, @RequestParam int field_id) {
+        return bookingFieldRepo.findDateTime(date, time, field_id);
     }
     
     @PostMapping

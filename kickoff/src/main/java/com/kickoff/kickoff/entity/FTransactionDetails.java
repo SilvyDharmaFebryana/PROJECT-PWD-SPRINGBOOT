@@ -18,6 +18,7 @@ public class FTransactionDetails {
     private String time;
     private double totalPrice;
     private int duration;
+    private String kodeBooking;
 
 
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
@@ -83,6 +84,14 @@ public class FTransactionDetails {
 
     public void setField(Field field) {
         this.field = field;
+    }
+
+    public String getKodeBooking() {
+        return kodeBooking;
+    }
+
+    public void setKodeBooking(String kodeBooking) {
+        this.kodeBooking = kodeBooking;
     }
 
 

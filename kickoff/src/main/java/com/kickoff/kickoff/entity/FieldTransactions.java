@@ -27,7 +27,7 @@ public class FieldTransactions {
     private String checkoutDate;
     private String approveDate;
     private String buktiTransfer;
-    private String kodeBooking;
+    private String noPesanan;
 
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
@@ -102,20 +102,20 @@ public class FieldTransactions {
         this.buktiTransfer = buktiTransfer;
     }
 
-    public String getKodeBooking() {
-        return kodeBooking;
-    }
-
-    public void setKodeBooking(String kodeBooking) {
-        this.kodeBooking = kodeBooking;
-    }
-
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getNoPesanan() {
+        return noPesanan;
+    }
+
+    public void setNoPesanan(String noPesanan) {
+        this.noPesanan = noPesanan;
     }
 
     // public List<FTransactionDetails> getFieldTransactionDetails() {

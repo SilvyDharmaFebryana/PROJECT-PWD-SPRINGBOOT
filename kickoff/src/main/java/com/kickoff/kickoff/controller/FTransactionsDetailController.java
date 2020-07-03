@@ -9,10 +9,12 @@ import com.kickoff.kickoff.entity.FieldTransactions;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,6 +31,11 @@ public class FTransactionsDetailController {
     @Autowired
     private FieldTransactionsRepo fieldTransactionsRepo;
 
+
+    @GetMapping("/check/")
+    public Iterable<FTransactionDetails> getDateTimeFieldCheck(@RequestParam String booking_date, @RequestParam String time, @RequestParam int field_id) {
+        return fTransactionDetailsRepo.findDateTimeField(booking_date, time, field_id);
+    }
     
     @PostMapping("/{fieldId}/{fieldTransactionId}")
     public FTransactionDetails postingTransactionDetails(@RequestBody FTransactionDetails fTransactionsDetails, @PathVariable int fieldId, @PathVariable int fieldTransactionId) {
