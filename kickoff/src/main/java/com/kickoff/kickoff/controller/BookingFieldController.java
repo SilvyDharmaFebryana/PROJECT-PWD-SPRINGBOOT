@@ -42,6 +42,11 @@ public class BookingFieldController {
     public Iterable<BookingField> getDateTimeCheck(@RequestParam String date, @RequestParam String time, @RequestParam int field_id) {
         return bookingFieldRepo.findDateTime(date, time, field_id);
     }
+
+    @GetMapping("/check/onthisdate/")
+    public Iterable<BookingField> getDateFieldcheck(@RequestParam String date, @RequestParam int field_id) {
+        return bookingFieldRepo.findDateField(date, field_id);
+    }
     
     @PostMapping
     public BookingField addBookingField(@RequestBody BookingField bookingField) {

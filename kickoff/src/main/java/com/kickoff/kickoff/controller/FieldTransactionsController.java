@@ -57,9 +57,9 @@ public class FieldTransactionsController {
         return findFieldTransactions;
     }
 
-    @GetMapping("/pending")
+    @GetMapping("/noPayment")
     public Iterable<FieldTransactions> getPendingStatus(@RequestParam String status) {
-        return fieldTransactionsRepo.statusPending("pending");
+        return fieldTransactionsRepo.statusPending("noPayment");
     }
 
     

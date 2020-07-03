@@ -28,6 +28,7 @@ public class FieldTransactions {
     private String approveDate;
     private String buktiTransfer;
     private String noPesanan;
+    private int attempt;
 
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
@@ -116,6 +117,14 @@ public class FieldTransactions {
 
     public void setNoPesanan(String noPesanan) {
         this.noPesanan = noPesanan;
+    }
+
+    public int getAttempt() {
+        return attempt;
+    }
+
+    public void setAttempt(int attempt) {
+        this.attempt = attempt;
     }
 
     // public List<FTransactionDetails> getFieldTransactionDetails() {
