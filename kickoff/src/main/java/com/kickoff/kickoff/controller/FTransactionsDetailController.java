@@ -1,5 +1,7 @@
 package com.kickoff.kickoff.controller;
 
+import java.util.List;
+
 import com.kickoff.kickoff.dao.FTransactionDetailsRepo;
 import com.kickoff.kickoff.dao.FieldRepo;
 import com.kickoff.kickoff.dao.FieldTransactionsRepo;
@@ -32,6 +34,11 @@ public class FTransactionsDetailController {
     private FieldTransactionsRepo fieldTransactionsRepo;
 
 
+    @GetMapping("/trans/")
+    public Iterable<FTransactionDetails> getDetailsFrom(@RequestParam int field_transactions_id) {
+        return fTransactionDetailsRepo.findDetails(field_transactions_id);
+    }
+
     @GetMapping("/check/")
     public Iterable<FTransactionDetails> getDateTimeFieldCheck(@RequestParam String booking_date, @RequestParam String time, @RequestParam int field_id) {
         return fTransactionDetailsRepo.findDateTimeField(booking_date, time, field_id);
@@ -62,7 +69,6 @@ public class FTransactionsDetailController {
         fTransactionsDetails.setFieldTransactions(findFieldTransactions);
         return fTransactionDetailsRepo.save(fTransactionsDetails);
         
-
     }
 
 }

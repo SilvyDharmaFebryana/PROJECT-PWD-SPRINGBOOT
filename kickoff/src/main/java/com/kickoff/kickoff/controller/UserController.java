@@ -75,9 +75,9 @@ public class UserController {
 		return "Sukses! akun anda telah terverifikasi\n";
 	}
 
-	@GetMapping("/username")
-    public Iterable<User> getUsername(@RequestParam String username) {
-        return userRepo.findUsername(username);
+	@GetMapping("/username/email/")
+    public Iterable<User> getUsername(@RequestParam String username, @RequestParam String email) {
+        return userRepo.findUsername(username, email);
     }
 	
 	@GetMapping("/login")
