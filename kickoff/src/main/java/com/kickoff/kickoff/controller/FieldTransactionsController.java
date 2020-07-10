@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kickoff.kickoff.dao.FieldTransactionsRepo;
+import com.kickoff.kickoff.dao.PaketRepo;
 import com.kickoff.kickoff.dao.UserRepo;
 import com.kickoff.kickoff.entity.FTransactionDetails;
 import com.kickoff.kickoff.entity.FieldTransactions;
+import com.kickoff.kickoff.entity.Paket;
 import com.kickoff.kickoff.entity.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,15 +53,24 @@ public class FieldTransactionsController {
     @Autowired
     private UserRepo userRepo;
 
-    @PostMapping("/{userId}")
-    public FieldTransactions postingTransaction(@RequestBody FieldTransactions fieldTransactions, @PathVariable int userId) {
+    @Autowired
+    private PaketRepo paketRepo;
+
+    @PostMapping("/{userId}/{paketId}")
+    public FieldTransactions postingTransaction(@RequestBody FieldTransactions fieldTransactions, @PathVariable int userId, @PathVariable int paketId) {
 
         User findUser = userRepo.findById(userId).get();
 
         if (findUser == null)
             throw new RuntimeException("USER NOT FOUND");
 
+        Paket findPaket = paketRepo.findById(paketId).get();
+
+        if (findPaket == null)
+            throw new RuntimeException("USER NOT FOUND");
+
         fieldTransactions.setUser(findUser);
+        fieldTransactions.setPaket(findPaket);
         return fieldTransactionsRepo.save(fieldTransactions);
     }
 
@@ -74,10 +85,32 @@ public class FieldTransactionsController {
 
         findFieldTransactions.setStatus("approve");
         findFieldTransactions.setApproveDate(approveDate);
+        findFieldTransactions.setNotif("transaksi sukses");
         return fieldTransactionsRepo.save(findFieldTransactions);
     }
 
-    @GetMapping
+    @PutMapping("/admin/decline/{idTrans}")
+    public FieldTransactions declineTrans(@PathVariable int idTrans, @RequestBody FieldTransactions fieldTransactions){
+
+        FieldTransactions findFieldTransactions = fieldTransactionsRepo.findById(idTrans).get();
+    
+        findFieldTransactions.setStatus("decline");
+        findFieldTransactions.setApproveDate("belom approve");
+        return fieldTransactionsRepo.save(findFieldTransactions);
+    }
+
+    @PutMapping("/admin/failed/{idTrans}")
+    public FieldTransactions failedTrans(@PathVariable int idTrans, @RequestBody FieldTransactions fieldTransactions){
+
+        FieldTransactions findFieldTransactions = fieldTransactionsRepo.findById(idTrans).get();
+    
+        findFieldTransactions.setStatus("failed");
+        findFieldTransactions.setApproveDate("ditolak");
+        return fieldTransactionsRepo.save(findFieldTransactions);
+    }
+
+
+    @GetMapping 
     public Iterable<FieldTransactions> getTransactions() {
         return fieldTransactionsRepo.findAll();
     }
@@ -98,6 +131,11 @@ public class FieldTransactionsController {
         return fieldTransactionsRepo.status("noPayment");
     }
 
+    @GetMapping("/attempt")
+    public Iterable<FieldTransactions> getAttempt(@RequestParam int attempt) {
+        return fieldTransactionsRepo.getAttempt(2);
+    }
+
     @GetMapping("/pending")
     public Iterable<FieldTransactions> getPendingStatus(@RequestParam String status) {
         return fieldTransactionsRepo.status("pending");
@@ -105,12 +143,17 @@ public class FieldTransactionsController {
 
     @GetMapping("/sukses")
     public Iterable<FieldTransactions> getSuksesStatus(@RequestParam String status) {
-        return fieldTransactionsRepo.status("sukses");
+        return fieldTransactionsRepo.status("approve");
+    }
+
+    @GetMapping("/decline")
+    public Iterable<FieldTransactions> getDeclineStatus(@RequestParam String status) {
+        return fieldTransactionsRepo.status("decline");
     }
 
     @GetMapping("/gagal")
     public Iterable<FieldTransactions> getGagalStatus(@RequestParam String status) {
-        return fieldTransactionsRepo.status("gagal");
+        return fieldTransactionsRepo.status("failed");
     }
     
     @GetMapping("/checkout/{idTrans}")
@@ -174,6 +217,41 @@ public class FieldTransactionsController {
         }
 
         return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream")).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileName=\"" + resource.getFilename() + "\"").body(resource);
+    }
+
+    
+    @PutMapping("/{id}")
+	public String editTransa(@RequestParam("file") MultipartFile file, @RequestParam("transData") String transString, @PathVariable int id) throws JsonMappingException, JsonProcessingException {
+		
+		FieldTransactions findFieldTransactions = fieldTransactionsRepo.findById(id).get();
+		
+		
+		findFieldTransactions = new ObjectMapper().readValue(transString, FieldTransactions.class);
+		Date date = new Date();
+		
+		String fileExtension = file.getContentType().split("/")[1];
+		String newFileName = "BUKTI-TF" + date.getTime() + "." + fileExtension;
+		
+		String fileName = StringUtils.cleanPath(newFileName);
+		
+		Path path = Paths.get(StringUtils.cleanPath(uploadPath) + fileName);
+		
+		try {
+			Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/transaction/download/")
+				.path(fileName).toUriString();
+		
+		
+        findFieldTransactions.setBuktiTransfer(fileDownloadUri);
+        findFieldTransactions.setAttempt(2);
+        findFieldTransactions.setStatus("pending");
+		fieldTransactionsRepo.save(findFieldTransactions);
+		
+		return fileDownloadUri;
     }
 
 

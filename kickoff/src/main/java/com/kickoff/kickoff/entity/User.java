@@ -29,6 +29,7 @@ public class User {
     private String gender;
     private String phoneNumber;
     private boolean isVerified;
+    private String profileImage;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -157,6 +158,14 @@ public class User {
 
     public void setFieldTransactions(List<FieldTransactions> fieldTransactions) {
         this.fieldTransactions = fieldTransactions;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     

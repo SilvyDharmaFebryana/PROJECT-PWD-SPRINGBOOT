@@ -34,9 +34,12 @@ public class FTransactionsDetailController {
     private FieldTransactionsRepo fieldTransactionsRepo;
 
 
-    @GetMapping("/trans/")
-    public Iterable<FTransactionDetails> getDetailsFrom(@RequestParam int field_transactions_id) {
-        return fTransactionDetailsRepo.findDetails(field_transactions_id);
+    @GetMapping("/trans/{idTrans}")
+    public Iterable<FTransactionDetails> getDetailsFrom(@PathVariable int idTrans) {
+        
+        FieldTransactions findFieldTransactions = fieldTransactionsRepo.findById(idTrans).get();
+
+        return fTransactionDetailsRepo.findDetails(findFieldTransactions);
     }
 
     @GetMapping("/check/")

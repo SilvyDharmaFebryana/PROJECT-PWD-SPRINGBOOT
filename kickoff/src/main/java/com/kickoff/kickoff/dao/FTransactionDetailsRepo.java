@@ -1,6 +1,7 @@
 package com.kickoff.kickoff.dao;
 
 import com.kickoff.kickoff.entity.FTransactionDetails;
+import com.kickoff.kickoff.entity.FieldTransactions;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +12,7 @@ public interface FTransactionDetailsRepo extends JpaRepository<FTransactionDetai
     public Iterable<FTransactionDetails> findDateTimeField(String booking_date, String time, int field_id);
 
     @Query(value = "SELECT * FROM ftransaction_details WHERE field_transactions_id = ?1", nativeQuery = true)
-    public Iterable<FTransactionDetails> findDetails(int field_transactions_id);
+    public Iterable<FTransactionDetails> findDetails(FieldTransactions findFieldTransactions);
 
 
 }

@@ -21,6 +21,8 @@ public class FieldTransactions {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // agar column id auto increment dgn otomatis
     private int id;
     private double totalPrice;
+    private double grandTotal;
+    private double totalPaket;
     private double totalDuration;
     private String status;
     private String paymentMethod;
@@ -29,10 +31,15 @@ public class FieldTransactions {
     private String buktiTransfer;
     private String noPesanan;
     private int attempt;
+    private String notif;
 
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "paket_id")
+    private Paket paket;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "fieldTransactions", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -125,6 +132,38 @@ public class FieldTransactions {
 
     public void setAttempt(int attempt) {
         this.attempt = attempt;
+    }
+
+    public String getNotif() {
+        return notif;
+    }
+
+    public void setNotif(String notif) {
+        this.notif = notif;
+    }
+
+    public Paket getPaket() {
+        return paket;
+    }
+
+    public void setPaket(Paket paket) {
+        this.paket = paket;
+    }
+
+    public double getGrandTotal() {
+        return grandTotal;
+    }
+
+    public void setGrandTotal(double grandTotal) {
+        this.grandTotal = grandTotal;
+    }
+
+    public double getTotalPaket() {
+        return totalPaket;
+    }
+
+    public void setTotalPaket(double totalPaket) {
+        this.totalPaket = totalPaket;
     }
 
     // public List<FTransactionDetails> getFieldTransactionDetails() {

@@ -23,6 +23,7 @@ public class Field {
     private String description;
     private String image;
     private String fieldName;
+    private float rating;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "field", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -94,6 +95,14 @@ public class Field {
 
     public void setBookingField(List<BookingField> bookingField) {
         this.bookingField = bookingField;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 
   

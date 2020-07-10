@@ -9,4 +9,7 @@ public interface FieldTransactionsRepo extends JpaRepository<FieldTransactions, 
     
     @Query(value = "SELECT * FROM field_transactions WHERE status = ?1", nativeQuery = true)
     public Iterable<FieldTransactions> status(String status);
+
+    @Query(value = "SELECT * FROM field_transactions WHERE attempt = ?1", nativeQuery = true)
+    public Iterable<FieldTransactions> getAttempt(int attempt);
 }
