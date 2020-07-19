@@ -24,14 +24,20 @@ public class Field {
     private String image;
     private String fieldName;
     private float rating;
+    private int jumlah;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "field", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<BookingField> bookingField;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fieldTransactions", cascade = CascadeType.ALL)
+    // @OneToMany(fetch = FetchType.LAZY, mappedBy = "fieldTransactions", cascade = CascadeType.ALL)
+    // @JsonIgnore
+    // private List<FTransactionDetails> fTransactionDetails;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "field", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<FTransactionDetails> fTransactionDetails;
+    private List<Notif> notif;
+
 
     public int getId() {
         return id;
@@ -103,6 +109,22 @@ public class Field {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public int getJumlah() {
+        return jumlah;
+    }
+
+    public void setJumlah(int jumlah) {
+        this.jumlah = jumlah;
+    }
+
+    public List<Notif> getNotif() {
+        return notif;
+    }
+
+    public void setNotif(List<Notif> notif) {
+        this.notif = notif;
     }
 
   

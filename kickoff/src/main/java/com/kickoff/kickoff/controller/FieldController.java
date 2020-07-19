@@ -17,9 +17,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 // import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -84,6 +87,8 @@ public class FieldController {
         return fileDownloadUri;
     }
 
+
+
     @GetMapping("/download/{fileName:.+}")
     public ResponseEntity<Object> downloadFile(@PathVariable String fileName) {
         Path path = Paths.get(uploadPath, fileName);
@@ -112,7 +117,7 @@ public class FieldController {
 
     @GetMapping("/basket")
     public Iterable<Field> getLapanganBasket(@RequestParam String category) {
-        return fieldRepo.findField("basket");
+        return fieldService.getLapanganBasket("basket");
     }
 
     @GetMapping("/voli")
@@ -125,7 +130,101 @@ public class FieldController {
         return fieldRepo.findField("futsal");
     }
 
+    @GetMapping("/tennis")
+    public Iterable<Field> getLapanganTennis(@RequestParam String category) {
+        return fieldRepo.findField("tennis");
+    }
 
+    @GetMapping("/badminton")
+    public Iterable<Field> getLapanganBadminton(@RequestParam String category) {
+        return fieldRepo.findField("badminton");
+    }
+
+    @GetMapping("/type")
+    public Iterable<Field> getType(@RequestParam String type) {
+        return fieldRepo.findType(type);
+    }
+
+    @GetMapping("/rate")
+    public Iterable<Field> getRate(@RequestParam int satu, @RequestParam int dua) {
+        return fieldRepo.rating(satu, dua);
+    }
+
+    @PutMapping("/edit/{id}")
+    public String editLapangan(@RequestParam("file") Optional<MultipartFile> file, @RequestParam("lapanganEdit") String lapanganString, @PathVariable int id) throws JsonMappingException, JsonProcessingException {
+		
+		Field findField = fieldRepo.findById(id).get();
+		
+		findField = new ObjectMapper().readValue(lapanganString, Field.class);
+
+		Date date = new Date();
+
+		String fileDownloadUri = findField.getImage();
+
+		if (file.toString() != "Optional.empty") {
+			
+			String fileExtension = file.get().getContentType().split("/")[1];
+
+			String newFileName = "FIELD" + date.getTime() + "." + fileExtension;
+
+			String fileName = StringUtils.cleanPath(newFileName);
+
+			Path path = Paths.get(StringUtils.cleanPath(uploadPath) + fileName);
+
+			try {
+				Files.copy(file.get().getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/lapangan/download/")
+					.path(fileName).toUriString();
+
+		}
+
+		findField.setImage(fileDownloadUri);
+		fieldRepo.save(findField);
+		
+		return fileDownloadUri;
+	
+    } 
+    
+    @DeleteMapping("/{id}")
+    public void deleteLapangan(@PathVariable int id) {
+        
+        Field findField = fieldRepo.findById(id).get();
+
+        findField.setBookingField(null);
+        // findField.set(null);
+
+        fieldRepo.deleteById(id);
+
+    }
+
+    @GetMapping("/report/field")
+    public Long getReportPaket(@RequestParam int id, @RequestParam String status) {
+        return fieldRepo.reportField(id, "approve");
+    }
+
+    
+    @GetMapping("/report/jumlah/pesan/")
+    public Iterable<Field> getJumlahPesan() {
+        return fieldRepo.getReportCount();
+    }
+
+    @GetMapping("/rating")
+    public Iterable<Field> editRating(@RequestParam int id) {
+        return fieldRepo.getLength(id);
+    }
+
+    @PutMapping("/rating/edit/{id}")
+    public Field newRating(@PathVariable int id, @RequestBody Field field, @RequestParam Float newRating ) {
+
+        Field findField = fieldRepo.findById(id).get();
+
+        findField.setRating(newRating);
+        return fieldRepo.save(findField);
+    }
 
 
 }

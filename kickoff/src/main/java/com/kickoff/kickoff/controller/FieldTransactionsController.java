@@ -14,6 +14,8 @@ import com.kickoff.kickoff.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -37,7 +39,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
-import java.util.List;
 
 
 @RestController
@@ -85,7 +86,7 @@ public class FieldTransactionsController {
 
         findFieldTransactions.setStatus("approve");
         findFieldTransactions.setApproveDate(approveDate);
-        findFieldTransactions.setNotif("transaksi sukses");
+        findFieldTransactions.setMessage("transaksi sukses");
         return fieldTransactionsRepo.save(findFieldTransactions);
     }
 
@@ -109,10 +110,21 @@ public class FieldTransactionsController {
         return fieldTransactionsRepo.save(findFieldTransactions);
     }
 
+    
+    @PutMapping("/admin/done/{idTrans}")
+    public FieldTransactions doneTrans(@PathVariable int idTrans, @RequestBody FieldTransactions fieldTransactions){
 
-    @GetMapping 
-    public Iterable<FieldTransactions> getTransactions() {
-        return fieldTransactionsRepo.findAll();
+        FieldTransactions findFieldTransactions = fieldTransactionsRepo.findById(idTrans).get();
+    
+        findFieldTransactions.setStatus("done");
+        return fieldTransactionsRepo.save(findFieldTransactions);
+    }
+
+
+
+    @GetMapping("/pagination")
+    public Page<FieldTransactions> getTransactions(Pageable pageable) {
+        return fieldTransactionsRepo.findAll(pageable);
     }
 
     @GetMapping("/{ftId}")
@@ -126,9 +138,9 @@ public class FieldTransactionsController {
         return findFieldTransactions;
     }
 
-    @GetMapping("/none")
-    public Iterable<FieldTransactions> getNoPayment(@RequestParam String status) {
-        return fieldTransactionsRepo.status("noPayment");
+    @GetMapping("/pending/admin")
+    public Iterable<FieldTransactions> adminTask(@RequestParam String status) {
+        return fieldTransactionsRepo.statusForAdmin("pending");
     }
 
     @GetMapping("/attempt")
@@ -136,24 +148,29 @@ public class FieldTransactionsController {
         return fieldTransactionsRepo.getAttempt(2);
     }
 
+    @GetMapping("/none")
+    public Iterable<FieldTransactions> getNoPayment(@RequestParam String status, @RequestParam int user_id) {
+        return fieldTransactionsRepo.status("noPayment", user_id);
+    }
+
     @GetMapping("/pending")
-    public Iterable<FieldTransactions> getPendingStatus(@RequestParam String status) {
-        return fieldTransactionsRepo.status("pending");
+    public Iterable<FieldTransactions> getPendingStatus(@RequestParam String status, @RequestParam int user_id) {
+        return fieldTransactionsRepo.status("pending", user_id);
     }
 
     @GetMapping("/sukses")
-    public Iterable<FieldTransactions> getSuksesStatus(@RequestParam String status) {
-        return fieldTransactionsRepo.status("approve");
+    public Iterable<FieldTransactions> getSuksesStatus(@RequestParam String status, @RequestParam int user_id) {
+        return fieldTransactionsRepo.status("approve", user_id);
     }
 
     @GetMapping("/decline")
-    public Iterable<FieldTransactions> getDeclineStatus(@RequestParam String status) {
-        return fieldTransactionsRepo.status("decline");
+    public Iterable<FieldTransactions> getDeclineStatus(@RequestParam String status, @RequestParam int user_id) {
+        return fieldTransactionsRepo.status("decline", user_id);
     }
 
     @GetMapping("/gagal")
-    public Iterable<FieldTransactions> getGagalStatus(@RequestParam String status) {
-        return fieldTransactionsRepo.status("failed");
+    public Iterable<FieldTransactions> getGagalStatus(@RequestParam String status, @RequestParam int user_id) {
+        return fieldTransactionsRepo.status("failed", user_id);
     }
     
     @GetMapping("/checkout/{idTrans}")

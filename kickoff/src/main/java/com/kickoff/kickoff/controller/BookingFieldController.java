@@ -86,6 +86,7 @@ public class BookingFieldController {
     public void deleteBookingList(@PathVariable int id) {
         BookingField findBookingList =  bookingFieldRepo.findById(id).get();
 
+        
         findBookingList.setField(null);
         findBookingList.setUser(null);
 

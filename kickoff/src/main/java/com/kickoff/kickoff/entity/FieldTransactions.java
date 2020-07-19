@@ -31,7 +31,7 @@ public class FieldTransactions {
     private String buktiTransfer;
     private String noPesanan;
     private int attempt;
-    private String notif;
+    private String message;
 
     @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
@@ -134,14 +134,6 @@ public class FieldTransactions {
         this.attempt = attempt;
     }
 
-    public String getNotif() {
-        return notif;
-    }
-
-    public void setNotif(String notif) {
-        this.notif = notif;
-    }
-
     public Paket getPaket() {
         return paket;
     }
@@ -166,13 +158,14 @@ public class FieldTransactions {
         this.totalPaket = totalPaket;
     }
 
-    // public List<FTransactionDetails> getFieldTransactionDetails() {
-    //     return fTransactionDetails;
-    // }
+    public String getMessage() {
+        return message;
+    }
 
-    // public void setFieldTransactionDetails(List<FTransactionDetails> fieldTransactionDetails) {
-    //     this.fTransactionDetails = fieldTransactionDetails;
-    // }
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
 
     
 

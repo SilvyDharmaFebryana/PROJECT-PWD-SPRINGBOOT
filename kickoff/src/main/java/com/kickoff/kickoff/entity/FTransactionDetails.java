@@ -1,12 +1,19 @@
 package com.kickoff.kickoff.entity;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class FTransactionDetails {
@@ -19,16 +26,29 @@ public class FTransactionDetails {
     private double totalPrice;
     private int duration;
     private String kodeBooking;
+    private boolean isCheckin;
 
 
-    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
     @JoinColumn(name = "field_transactions_id")
     private FieldTransactions fieldTransactions;
 
-    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
     @JoinColumn(name = "field_id")
     private Field field;
 
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    // @OneToMany(fetch = FetchType.LAZY, mappedBy = "fTransactionDetails", cascade = CascadeType.ALL)
+    // @JsonIgnore
+    // private List<Notif> notif;
+
+    @OneToOne(mappedBy = "fTransactionDetails", fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE,
+        CascadeType.PERSIST, CascadeType.REFRESH })
+    @JsonIgnore
+    private Notif notif;
 
     public int getId() {
         return id;
@@ -93,6 +113,30 @@ public class FTransactionDetails {
     public void setKodeBooking(String kodeBooking) {
         this.kodeBooking = kodeBooking;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public boolean isCheckin() {
+        return isCheckin;
+    }
+
+    public void setCheckin(boolean isCheckin) {
+        this.isCheckin = isCheckin;
+    }
+
+    // public List<Notif> getNotif() {
+    //     return notif;
+    // }
+
+    // public void setNotif(List<Notif> notif) {
+    //     this.notif = notif;
+    // }
 
 
 }

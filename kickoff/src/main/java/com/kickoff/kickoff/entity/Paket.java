@@ -20,6 +20,7 @@ public class Paket {
     private int id;
     private String jenisPaket;
     private String namaPaket;
+    private int jumlah;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "paket", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -55,6 +56,14 @@ public class Paket {
 
     public void setFieldTransactions(List<FieldTransactions> fieldTransactions) {
         this.fieldTransactions = fieldTransactions;
+    }
+
+    public int getJumlah() {
+        return jumlah;
+    }
+
+    public void setJumlah(int jumlah) {
+        this.jumlah = jumlah;
     }
 
 

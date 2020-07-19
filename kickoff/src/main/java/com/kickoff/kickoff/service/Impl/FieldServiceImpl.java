@@ -32,6 +32,13 @@ public class FieldServiceImpl implements FieldService {
     @Transactional
 	public Optional<Field> getLapanganById(int id) {
 		return fieldRepo.findById(id);
-	}
+    }
+    
+    
 
+    @Override
+    @Transactional
+    public Iterable<Field> getLapanganBasket(String category) {
+        return fieldRepo.findField(category);
+    }
 }

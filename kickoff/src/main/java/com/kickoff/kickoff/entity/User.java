@@ -39,6 +39,13 @@ public class User {
     @JsonIgnore
     private List<FieldTransactions> fieldTransactions;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<FTransactionDetails> fTransationDetails;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Notif> notif;
 
     public int getId() {
         return id;
@@ -168,8 +175,21 @@ public class User {
         this.profileImage = profileImage;
     }
 
-    
+    public List<FTransactionDetails> getfTransationDetails() {
+        return fTransationDetails;
+    }
 
+    public void setfTransationDetails(List<FTransactionDetails> fTransationDetails) {
+        this.fTransationDetails = fTransationDetails;
+    }
+
+    public List<Notif> getNotif() {
+        return notif;
+    }
+
+    public void setNotif(List<Notif> notif) {
+        this.notif = notif;
+    }
 
 
 
